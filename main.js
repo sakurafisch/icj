@@ -1,33 +1,45 @@
 import Lexer from './lexer/Lexer.js';
 import Source from './lexer/Source.js'
 import Parser from './parser/Parser.js';
-import util from "util";
-import InterpretVisitor from './interpreter/InterpretVisitor.js';
-
-
+// import util from "util";
+// import InterpretVisitor from './interpreter/InterpretVisitor.js';
+import YamlVisitor from './interpreter/YamlVisitor.js';
 
 (function main() {
-    // lexer
-    const code = `hi "lexer"`;
+    const code = `1 + 2 + 3 + 4 + 5 * 6`;
     const src = new Source(code);
     const lexer = new Lexer(src);
-
-    // // Log lexer output
-    // while (true) {
-    //     const tok = lexer.next();
-    //     if (tok.type === TokenType.EOF) {
-    //         break;
-    //     }
-    //     console.log(tok);
-    // }
-
-    // parser
     const parser = new Parser(lexer);
+
     const ast = parser.parseProg();
-    console.log(util.inspect(ast, true, null));
+    const visitor = new YamlVisitor();
+    console.log(visitor.visitProg(ast));
+})()
 
-    // interpreter
-    const visitor = new InterpretVisitor();
-    visitor.visitProg(ast);
 
-})();
+
+// (function main() {
+//     // lexer
+//     const code = `hi "lexer"`;
+//     const src = new Source(code);
+//     const lexer = new Lexer(src);
+
+//     // // Log lexer output
+//     // while (true) {
+//     //     const tok = lexer.next();
+//     //     if (tok.type === TokenType.EOF) {
+//     //         break;
+//     //     }
+//     //     console.log(tok);
+//     // }
+
+//     // parser
+//     const parser = new Parser(lexer);
+//     const ast = parser.parseProg();
+//     console.log(util.inspect(ast, true, null));
+
+//     // interpreter
+//     const visitor = new InterpretVisitor();
+//     visitor.visitProg(ast);
+
+// })();

@@ -9,19 +9,23 @@ export default class Lexer {
         this.src = src;
     }
 
+    static isDigit(n) {
+        return n >= "0" && n <= "9";
+    }
+
+    static isOp(ch) {
+        return ["*", "/", "+", "-", "*"].indexOf(ch) !== -1;
+    }
+
     next() {
         this.skipWhitespace();
         const ch = this.src.peek();
-        switch(ch) {
-            case '"':
-                return this.readString();
-            case "h":
-                return this.readHi();
-            case EOF:
-                return new Token(TokenType.EOF);
-            default:
-                throw new Error(this.makeErrMsg());
-        }
+        if (ch === '"') return this.readString();
+        if (ch === "h") return this.readHi();
+        if (Lexer.isDigit(ch)) return this.readNumber();
+        if (Lexer.isOp(ch)) return this.readOp();
+        if (ch === EOF) return new Token(TokenType.EOF);
+        throw new Error(this.makeErrMsg());
     }
 
     makeErrMsg() {
@@ -59,6 +63,31 @@ export default class Lexer {
         }
         tok.loc.end = this.src.getPos();
         tok.value = v.join("");
+        return tok;
+    }
+
+    readNumber() {
+        const tok = new Token(TokenType.NUMBER);
+        tok.loc.start = this.getPos();
+        const v = [this.src.read()];
+        while (true) {
+            let ch = this.src.peek();
+            if (!Lexer.isDigit(ch)) {
+                break;
+            }
+            v.push(this.src.read());
+            continue;
+        }
+        tok.loc.end = this.getPos();
+        tok.value = v.join("");
+        return tok;
+    }
+
+    readOp() {
+        const tok = new Token();
+        tok.loc.start = this.getPos();
+        tok.type = this.src.read();
+        tok.loc.end = this.getPos();
         return tok;
     }
 
