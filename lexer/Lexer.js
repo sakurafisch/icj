@@ -1,6 +1,8 @@
 import { EOL, EOF } from "./const.js";
 import Token from "./Token.js";
 import TokenType from "./TokenType.js";
+import process from 'process';
+
 
 export default class Lexer {
     constructor(src) {
@@ -30,8 +32,9 @@ export default class Lexer {
         const tok = new Token(TokenType.HI);
         tok.loc.start = this.src.getPos();
         const hi = this.src.read(2);
-        if (!hi === "hi") {
+        if (hi !== "hi") {
             this.makeErrMsg();
+            process.exit();
         }
         // assert.ok(hi === "hi", this.makeErrMsg());
         tok.loc.end = this.src.getPos();
@@ -68,5 +71,16 @@ export default class Lexer {
             }
             break;
         }
+    }
+
+    peek() {
+        this.src.pushPos();
+        const tok = this.next();
+        this.src.restorePos();
+        return tok;
+    }
+
+    getPos() {
+        return this.src.getPos();
     }
 }

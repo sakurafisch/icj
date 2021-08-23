@@ -1,6 +1,8 @@
-import Lexer from './Lexer.js';
-import Source from './Source.js'
-import TokenType from './TokenType.js';
+import Lexer from './lexer/Lexer.js';
+import Source from './lexer/Source.js'
+import TokenType from './lexer/TokenType.js';
+import Parser from './parser/Parser.js';
+import util from "util";
 
 
 
@@ -9,11 +11,15 @@ import TokenType from './TokenType.js';
     const src = new Source(code);
     const lexer = new Lexer(src);
 
-    while (true) {
-        const tok = lexer.next();
-        if (tok.type === TokenType.EOF) {
-            break;
-        }
-        console.log(tok);
-    }
+    // while (true) {
+    //     const tok = lexer.next();
+    //     if (tok.type === TokenType.EOF) {
+    //         break;
+    //     }
+    //     console.log(tok);
+    // }
+
+    const parser = new Parser(lexer);
+    const ast = parser.parseProg();
+    console.log(util.inspect(ast, true, null));
 })();

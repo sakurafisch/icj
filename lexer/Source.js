@@ -10,6 +10,7 @@ export default class Source {
         this.line = 1;
         this.col = 0;
         this.isPeek = false;
+        this.posStack = [];
     }
 
     read(cnt = 1) {
@@ -55,6 +56,20 @@ export default class Source {
 
     getPos() {
         return new Position(this.ofst, this.line, this.col);
+    }
+
+    pushPos() {
+        this.posStack.push(this.getPos());
+    }
+
+    restorePos() {
+        const pos = this.posStack.pop();
+        if (pos === undefined) {
+            throw new LexerError("Unbalanced popping of position stack");
+        }
+        this.ofst = pos.ofst;
+        this.line = pos.linel;
+        this.col = pos.col;
     }
 }
 
