@@ -78,8 +78,23 @@ export default class Perser {
     }
 
     parseExpr() {
-        const num = this.parseNum();
-        return this.parseExpr1(num);
+        // const num = this.parseNum();
+        // return this.parseExpr1(num);
+
+        let left = this.parseTerm();
+        while (true) {
+            const op = this.lexer.peek();
+            if (op.type !== "+" && op.type !== "-") {
+                break;
+            }
+            this.lexer.next();
+            const node = new BinaryExpr();
+            node.left = left;
+            node.op = op;
+            node.right = this.parseTerm();
+            left = node;
+        }
+        return left;
     }
 
     parseNum() {
@@ -106,6 +121,27 @@ export default class Perser {
         }
         node.right = this.parseExpr();
         return node;
+    }
+
+    parseTerm() {
+        let left = this.parseFactor();
+        while (true) {
+            const op = this.lexer.peek();
+            if (op.type !== "*" && op.type !== "/") {
+                break;
+            }
+            this.lexer.next();
+            const node = new BinaryExpr();
+            node.left = left;
+            node.op = op;
+            node.right = this.parseFactor();
+            left = node;
+        }
+        return left;
+    }
+
+    parseFactor() {
+        return this.parseNum();
     }
 
     makeErrMsg(tok) {
