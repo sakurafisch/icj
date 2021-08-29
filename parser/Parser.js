@@ -78,9 +78,6 @@ export default class Perser {
     }
 
     parseExpr() {
-        // const num = this.parseNum();
-        // return this.parseExpr1(num);
-
         let left = this.parseTerm();
         while (true) {
             const op = this.lexer.peek();
@@ -108,26 +105,28 @@ export default class Perser {
         return node;
     }
 
-    parseExpr1(left) {
-        const node = new BinaryExpr();
-        node.left = left;
-        node.op = this.lexer.peek();
-        if (!Lexer.isOp(node.op.type)) {
-            return left;
-        }
-        this.lexer.next();
-        if (!Lexer.isOp(node.op.type)) {
-            throw new Error(this.makeErrMsg(node.op));
-        }
-        node.right = this.parseExpr();
-        return node;
-    }
-
     parseTerm() {
-        let left = this.parseFactor();
+        let left = this.parseExpo();
         while (true) {
             const op = this.lexer.peek();
             if (op.type !== "*" && op.type !== "/") {
+                break;
+            }
+            this.lexer.next();
+            const node = new BinaryExpr();
+            node.left = left;
+            node.op = op;
+            node.right = this.parseExpo();
+            left = node;
+        }
+        return left;
+    }
+
+    parseExpo() {
+        let left = this.parseFactor();
+        while (true) {
+            const op = this.lexer.peek();
+            if (op.type !== "**") {
                 break;
             }
             this.lexer.next();

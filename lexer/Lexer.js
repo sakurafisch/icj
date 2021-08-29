@@ -87,6 +87,12 @@ export default class Lexer {
         const tok = new Token();
         tok.loc.start = this.getPos();
         tok.type = this.src.read();
+        if (tok.type === "*") {
+            if (this.src.peek() === "*") {
+                this.src.read();
+                tok.type = "**";
+            }
+        }
         tok.loc.end = this.getPos();
         return tok;
     }

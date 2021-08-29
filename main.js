@@ -6,7 +6,7 @@ import Parser from './parser/Parser.js';
 import YamlVisitor from './interpreter/YamlVisitor.js';
 
 (function main() {
-    const code = `1 + 2 + 3 + 4 + 5 * 6`;
+    const code = `1 + 2 ** 3 * 5`;
     const src = new Source(code);
     const lexer = new Lexer(src);
     const parser = new Parser(lexer);

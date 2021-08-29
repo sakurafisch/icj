@@ -8,5 +8,6 @@ TokenType.MUL = "*";
 TokenType.DIV = "/";
 TokenType.ADD = "+";
 TokenType.SUB = "-";
+TokenType.EXPO = "**";
 
 export default TokenType;
