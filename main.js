@@ -4,16 +4,17 @@ import Parser from './parser/Parser.js';
 // import util from "util";
 // import InterpretVisitor from './interpreter/InterpretVisitor.js';
 import YamlVisitor from './interpreter/YamlVisitor.js';
+import InterpretVisitor from './interpreter/InterpretVisitor.js';
 
 (function main() {
-    const code = `1 + 2 ** 3 * 5`;
+    const code = `print 1 + 2 ** 3 * 5`;
     const src = new Source(code);
     const lexer = new Lexer(src);
     const parser = new Parser(lexer);
 
     const ast = parser.parseProg();
-    const visitor = new YamlVisitor();
-    console.log(visitor.visitProg(ast));
+    const visitor = new InterpretVisitor();
+    visitor.visitProg(ast);
 })()
 
 

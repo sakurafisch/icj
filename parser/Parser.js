@@ -5,6 +5,7 @@ import SayHi from './SayHi.js'
 import ExprStmt from "./ExprStmt.js";
 import NumLiteral from "./Numliteral.js";
 import BinaryExpr from "./BinaryExpr.js";
+import PrintStmt from "./PrintStmt.js";
 import Lexer from "../lexer/Lexer.js";
 
 export default class Perser {
@@ -34,6 +35,9 @@ export default class Perser {
             if (tok.type === TokenType.EOF) {
                 break;
             }
+            if (tok.type === TokenType.PRINT) {
+                stmt = this.parsePrintStmt();
+            }
             if (tok.type === TokenType.HI) {
                 stmt = this.parseSayHi();
             }
@@ -42,6 +46,15 @@ export default class Perser {
             }
             node.body.push(stmt);
         }
+        node.loc.end = this.lexer.getPos();
+        return node;
+    }
+
+    parsePrintStmt() {
+        const node = new PrintStmt();
+        let tok = this.lexer.next();
+        node.loc.start = tok.loc.start;
+        node.value = this.parseExpr();
         node.loc.end = this.lexer.getPos();
         return node;
     }

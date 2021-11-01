@@ -5,13 +5,18 @@ import NodeType from "../parser/NodeType.js";
 export default class Visitor {
     visitProg(node) {}
     visitSayHi(node) {}
+    visitPrintStmt(node) {}
     visitExprStmt(node) {}
     visitStmt(node) {
         switch (node.type) {
+            case NodeType.PRINT_STMT:
+                return this.visitPrintStmt(node);
             case NodeType.EXPR_STMT:
                 return this.visitExprStmt(node);
             case NodeType.SAY_HI:
                 return this.visitSayHi(node);
+            default:
+                throw new Error("Can not match any NodeType")
         }
     }
     visitStmtList(list) {}

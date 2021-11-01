@@ -9,5 +9,6 @@ TokenType.DIV = "/";
 TokenType.ADD = "+";
 TokenType.SUB = "-";
 TokenType.EXPO = "**";
+TokenType.PRINT = "print";
 
 export default TokenType;
